@@ -57,10 +57,10 @@ static void unprotect_address(mocked_function_t * functionp) {
 		perror("could not set protection");
 		exit(-1);
 	}
-	if (-1 == mprotect(p+psize,128, PROT_WRITE|PROT_READ|PROT_EXEC)){
+/*	if (-1 == mprotect(p+psize,128, PROT_WRITE|PROT_READ|PROT_EXEC)){
 		perror("could not set protection on next page");
 		exit(-1);
-	}
+	}*/
 	my_memcpy(functionp->backup_function_data,functionp->addr,STUB_SIZE);
 }
 
