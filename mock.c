@@ -18,7 +18,7 @@ static void initialize_mock_api() {
 
 typedef struct _mocked_function_t  {
 	ListNode_t node;
-	void * addr;
+	void * addr;  // 原函数地址
 	void * new_addr;
 	char backup_function_data[STUB_SIZE];
 } mocked_function_t;
@@ -50,17 +50,14 @@ static void my_memcpy(void *dst,void *src,size_t size) {
 
 static void unprotect_address(mocked_function_t * functionp) {
 	char *p;
-	long psize = sysconf(_SC_PAGESIZE);
-	for (p = (char *)functionp->addr; (unsigned long)p % psize; --p)
+	long psize = sysconf(_SC_PAGESIZE);  // 4096
+	for (p = (char *)functionp->addr; (unsigned long)p % psize; --p)  // 让p移动到当前页的起始地址
 		;
-	if (-1 == mprotect(p,128, PROT_WRITE|PROT_READ|PROT_EXEC)){
+	// 为防止函数地址在当前页的边界，直接解除连续2个页的内存保护
+	if (-1 == mprotect(p, psize * 2, PROT_WRITE|PROT_READ|PROT_EXEC)){
 		perror("could not set protection");
 		exit(-1);
 	}
-/*	if (-1 == mprotect(p+psize,128, PROT_WRITE|PROT_READ|PROT_EXEC)){
-		perror("could not set protection on next page");
-		exit(-1);
-	}*/
 	my_memcpy(functionp->backup_function_data,functionp->addr,STUB_SIZE);
 }
 

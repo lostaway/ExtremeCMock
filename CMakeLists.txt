@@ -6,6 +6,8 @@ cmake_policy(SET CMP0003 NEW)
 set (VERSION_MAJOR 0)
 set (VERSION_MINOR 9.2)
 
+#set(CMAKE_C_FLAGS "-Wall -Wextra -ggdb3 -fPIC")
+#set(CMAKE_C_LDFLAGS " -fPIC")
 
 #set(CMAKE_CXX_COMPILER "/usr/bin/clang++")
 #set(CMAKE_C_COMPILER "/usr/bin/clang")
